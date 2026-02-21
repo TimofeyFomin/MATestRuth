@@ -97,11 +97,11 @@ class FourthScreen(Screen):
         button.on_press = self.changing_screen
     def changing_screen(self):
         try:
-            schema = SchemaDimension(dimension=self.textinput_res2)
+            schema = SchemaDimension(dimension=self.textinput_res.text)
         except ValidationError:
             self.textinput_res.text = ''
         try:
-            schema = SchemaDimension(dimension=self.textinput_res2)
+            schema = SchemaDimension(dimension=self.textinput_res2.text)
             self.manager.current = 'fifth screen'
         except ValidationError:
             self.textinput_res2.text = ''
