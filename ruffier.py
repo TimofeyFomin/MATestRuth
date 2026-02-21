@@ -84,7 +84,7 @@ def test(P1, P2, P3, age):
    Возвращает готовые тексты, которые остается нарисовать в нужном месте
    Использует для текстов константы, заданные в начале этого модуля. '''
    if age < 7:
-       return (txt_index + "0", txt_nodata) # тайна сия не для теста сего
+       return txt_index + "0" + '\n' +  txt_nodata # тайна сия не для теста сего
    else:
        ruff_index = ruffier_index(P1, P2, P3) # расчет
        result = txt_res[ruffier_result(ruff_index, neud_level(age))] # интерпретация, перевод числового уровня подготовки в текстовые данные

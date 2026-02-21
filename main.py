@@ -6,7 +6,8 @@ from kivy.uix.label import Label
 import instructions
 from kivy.uix.textinput import TextInput
 from pydantic import BaseModel, Field, ValidationError
-from typing import Optional, Literal
+from typing import Optional
+import ruffier
 
 
 class MyApp(App):
@@ -40,7 +41,7 @@ class FirstScreen(Screen):
         age = self.textinput_age.text
         name = self.textinput_name.text
         try:
-            schema = SchemaFirstScreen(age=age, name=name)
+            app.user_info = SchemaFirstScreen(age=age, name=name)
             self.manager.current = 'second screen'
         except ValidationError:
             self.textinput_age.text = ''
@@ -61,7 +62,7 @@ class SecondScreen(Screen):
         button.on_press = self.changing_screen
     def changing_screen(self):
         try:
-            schema = SchemaDimension(dimension=self.textinput.text)
+            app.p1 = SchemaDimension(dimension=self.textinput.text)
             self.manager.current = 'third screen'
         except ValidationError:
             self.textinput.text = ''
@@ -97,18 +98,26 @@ class FourthScreen(Screen):
         button.on_press = self.changing_screen
     def changing_screen(self):
         try:
-            schema = SchemaDimension(dimension=self.textinput_res.text)
+            app.p2 = SchemaDimension(dimension=self.textinput_res.text)
         except ValidationError:
             self.textinput_res.text = ''
         try:
-            schema = SchemaDimension(dimension=self.textinput_res2.text)
+            app.p3 = SchemaDimension(dimension=self.textinput_res2.text)
             self.manager.current = 'fifth screen'
         except ValidationError:
             self.textinput_res2.text = ''
 class FifthScreen(Screen):
-    pass
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.label = Label(text='123')
+        self.add_widget(self.label)
+        self.on_enter = self.get_answer
+    def get_answer(self):
+        answer = ruffier.test(app.p1.dimension, app.p2.dimension, app.p3.dimension, app.user_info.age)
+        self.label.text = answer
 class SchemaFirstScreen(BaseModel):
     age: Optional[int] = Field(..., ge=1, le=120)
+    name: Optional[str]
 class SchemaDimension(BaseModel):
     dimension: Optional[int] = Field(..., ge=1)
 
